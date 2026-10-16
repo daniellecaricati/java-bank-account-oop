@@ -3,6 +3,7 @@ package bank_account;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import bank_account.controller.AccountController;
 import bank_account.model.Account;
 import bank_account.model.CheckingAccount;
 import bank_account.model.SavingsAccount;
@@ -11,25 +12,9 @@ import utility.Colors;
 public class Menu {
 	
 	private static final Scanner read = new Scanner(System.in); //Scanner out of main makes it accessible to all 
+	private static final AccountController accountController = new AccountController();
 	
 	public static void main(String[] args) {
-		
-		//Checking Account test
-		CheckingAccount cc1 = new CheckingAccount(2, 123, 1, "Fabiana Sena", 0.0f, 1000.0f);
-		cc1.display();
-		cc1.withdraw(120.0f);
-		cc1.display();
-		cc1.deposit(5000.0f);
-		cc1.display();
-		
-		//SavingsAccount Test
-		SavingsAccount cp1 = new SavingsAccount(3, 123, 2, "Adriana Mendes", 15000.0f, 15);
-		cp1.display();
-		cp1.withdraw(750.0f);
-		cp1.display();
-		cp1.deposit(2500.0f);
-		cp1.display();
-		
 		
 		int option;
 		
@@ -68,10 +53,12 @@ public class Menu {
 			switch (option) {
 			case 1: 
 				System.out.println(Colors.TEXT_GREEN_BOLD + "Create Account\n");
+				createAccount();
 				keyPress();
 				break;
 			case 2: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Show All Accounts\n");
+				listAll();
 				keyPress();
 				break;
 			case 3: 
@@ -118,5 +105,41 @@ public class Menu {
 			System.out.println(Colors.TEXT_RESET + "\nPress Enter to continue..");
 			read.nextLine();
 		}
+		
+		private static void listAll() {
+			accountController.listAll();
+		}
+		
+		private static void createAccount() {
+			System.out.println("Enter Account Branch Number: ");
+			int accountBranch = read.nextInt();
+			
+			System.out.println("Enter Account Holder Name: ");
+			read.skip("\\R");
+			String accountHolder = read.nextLine();
+			
+			System.out.print("Enter Account Type Number (1 - Checking Account | 2 - Savings Account)");
+			int accountType = read.nextInt();
+			
+			System.out.println("Ente the initial account balance: ");
+			float balance = read.nextFloat();
+			
+			switch (accountType) {
+			
+			case 1 -> {
+				System.out.println("Enter the account limit amount: ");
+				float limit = read.nextFloat();
+				accountController.create(new CheckingAccount(accountController.createNumber(), accountBranch, accountType, accountHolder, balance, limit));
+			}
+			case 2 -> {
+				System.out.println("Enter the account Anniversary Day: ");
+				int anniversary = read.nextInt();
+				accountController.create(new SavingsAccount(accountController.createNumber(), accountBranch, accountType, accountHolder, balance, anniversary));
+			} 
+			default -> System.out.println(Colors.TEXT_RED_BOLD + "Invalid Account Type" + Colors.TEXT_RESET);
+			}
+			
+		}
+		
 
 }
