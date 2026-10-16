@@ -1,5 +1,6 @@
 package bank_account;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import bank_account.model.Account;
@@ -48,7 +49,14 @@ public class Menu {
 			System.out.println("      0 - Exit                      ");
 			System.out.println("Please enter option number:         ");
 			
+			try {
 			option = read.nextInt();
+			read.nextLine();
+			}catch(InputMismatchException e) {
+				option = -1;
+				System.out.println("Enter a positive number!");
+				read.nextLine();
+			}
 			
 			if (option == 0) {
 				System.out.println(Colors.TEXT_PURPLE_BOLD + "\n HighPay Bank - Your future starts here! ");
@@ -60,30 +68,39 @@ public class Menu {
 			switch (option) {
 			case 1: 
 				System.out.println(Colors.TEXT_GREEN_BOLD + "Create Account\n");
+				keyPress();
 				break;
 			case 2: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Show All Accounts\n");
+				keyPress();
 				break;
 			case 3: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Search Account by Number\n");
+				keyPress();
 				break;
 			case 4: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Update Account Information\n");
+				keyPress();
 				break;
 			case 5: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Delete Account\n");
+				keyPress();
 				break;
 			case 6: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Withdraw\n");
+				keyPress();
 				break;
 			case 7: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Deposit\n");
+				keyPress();
 				break;
 			case 8: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Transfer Between Accounts\n");
+				keyPress();
 				break;
 			default:
 				System.out.println(Colors.TEXT_RED_BOLD + "Invalid Option.");
+				keyPress();
 				break;
 			}
 		}
@@ -94,6 +111,12 @@ public class Menu {
 			System.out.println(" Project developed by Danielle Caricati   ");
 			System.out.println("------------------------------------------");
 			
+		}
+		
+		//Method to make the system advance only after the user press enter.
+		public static void keyPress() {
+			System.out.println(Colors.TEXT_RESET + "\nPress Enter to continue..");
+			read.nextLine();
 		}
 
 }
