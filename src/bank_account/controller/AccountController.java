@@ -64,19 +64,42 @@ public class AccountController implements AccountRepository {
 
 	@Override
 	public void withdraw(int accountNumber, float amount) {
-		// TODO Auto-generated method stub
+		var account = searchCollection(accountNumber);
+		if (account != null) {
+			if(account.withdraw(amount) == true) {
+				System.out.printf("\nThe withdraw of Account Number: %d has been successfully completed!", accountNumber);
+			}
+		} else {
+			System.out.printf("\nThe Account Number: %d has not been found!%n", accountNumber);
+		}
 		
 	}
 
 	@Override
 	public void deposit(int accountNumber, float amount) {
-		// TODO Auto-generated method stub
+		var account = searchCollection(accountNumber);
+		if(account != null) {
+			account.deposit(amount);
+			System.out.printf("\nThe deposit of Account Number: %d has been successfully completed!", accountNumber);
+		}else {
+			System.out.printf("\nThe Account Number: %d has not been found!", accountNumber);
+		}
 		
 	}
 
 	@Override
 	public void transfer(int sourceAccountNumber, int destinationAccountNumber, float amount) {
-		// TODO Auto-generated method stub
+		var sourceAccount = searchCollection(sourceAccountNumber);
+		var destinationAccount = searchCollection(destinationAccountNumber);
+		
+		if(sourceAccount != null && destinationAccount != null) {
+			if (sourceAccount.withdraw(amount) == true) {
+				destinationAccount.deposit(amount);
+				System.out.printf("\nThe transfer from Account Number: %d, to Account Number: %d, has been successfully completed", sourceAccountNumber, destinationAccountNumber);
+			} else {
+				System.out.println("\nThe Source Account Number and/or Destination Account Number has not been found.");
+			}
+		}
 		
 	}
 	

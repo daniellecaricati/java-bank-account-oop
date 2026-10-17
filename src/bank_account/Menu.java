@@ -79,14 +79,17 @@ public class Menu {
 				break;
 			case 6: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Withdraw\n");
+				withdraw();
 				keyPress();
 				break;
 			case 7: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Deposit\n");
+				deposit();
 				keyPress();
 				break;
 			case 8: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Transfer Between Accounts\n");
+				transfer();
 				keyPress();
 				break;
 			default:
@@ -207,7 +210,7 @@ public class Menu {
 				System.out.printf("\nAccount Number %d has not been found" + accountNumber);
 			}	
 		}
-		
+		//method to delete account
 		private static void deleteAccount() {
 			System.out.print("Enter the Account Number you want to delete: ");
 			int accountNumber = read.nextInt();
@@ -221,6 +224,36 @@ public class Menu {
 			} else {
 				System.out.println("\nOperation Cancelled.");
 			}
+		}
+		
+		//Bank Operations
+		private static void withdraw() {
+			System.out.print("Enter Account Number: ");
+			int accountNumber = read.nextInt();
+			System.out.print("Enter amount: ");
+			float amount = read.nextFloat();
+			accountController.withdraw(accountNumber, amount);
+		}
+		
+		private static void deposit() {
+			System.out.print("Enter the Account Number: ");
+			int accountNumber = read.nextInt();
+			System.out.print("Enter the amount you want to deposit: ");
+			float amount = read.nextFloat();
+			accountController.deposit(accountNumber, amount);
+		}
+		
+		private static void transfer() {
+			System.out.print("Enter the Source Account Number: ");
+			int sourceAccountNumber = read.nextInt();
+			
+			System.out.print("Enter the Destination Account Number: ");
+			int destinationAccountNumber = read.nextInt();
+			
+			System.out.print("Enter the amount you want to transfer: ");
+			float amount = read.nextFloat();
+			
+			accountController.transfer(sourceAccountNumber, destinationAccountNumber, amount);
 		}
 
 }
