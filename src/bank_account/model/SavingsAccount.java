@@ -20,7 +20,7 @@ public class SavingsAccount extends Account{
 	@Override
 	public void display() {
 		super.display();
-		System.out.println("Account anniversary: " + this.anniversary);
+		System.out.println("Account Anniversary Day: " + this.anniversary);
 	}
 	
 	

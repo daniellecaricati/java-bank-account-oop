@@ -16,8 +16,9 @@ public class Menu {
 	
 	public static void main(String[] args) {
 		
-		int option;
+		createAccountTest(); 
 		
+		int option; //variable for menu
 		while (true) {
 			System.out.println(Colors.TEXT_PURPLE_BRIGHT + Colors.ANSI_BLACK_BACKGROUND + 
 					"------------------------------------");
@@ -63,14 +64,17 @@ public class Menu {
 				break;
 			case 3: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Search Account by Number\n");
+				findAccountByNumber();
 				keyPress();
 				break;
 			case 4: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Update Account Information\n");
+				updateAccount();
 				keyPress();
 				break;
 			case 5: 
 				System.out.println(Colors.TEXT_GREEN_BOLD +"Delete Account\n");
+				deleteAccount();
 				keyPress();
 				break;
 			case 6: 
@@ -92,7 +96,7 @@ public class Menu {
 			}
 		}
 	}
-	
+		//about - information method
 		public static void about() {
 			System.out.println("------------------------------------------");
 			System.out.println(" Project developed by Danielle Caricati   ");
@@ -106,10 +110,12 @@ public class Menu {
 			read.nextLine();
 		}
 		
+		//list all method
 		private static void listAll() {
 			accountController.listAll();
 		}
 		
+		//Method to create account
 		private static void createAccount() {
 			System.out.println("Enter Account Branch Number: ");
 			int accountBranch = read.nextInt();
@@ -137,9 +143,84 @@ public class Menu {
 				accountController.create(new SavingsAccount(accountController.createNumber(), accountBranch, accountType, accountHolder, balance, anniversary));
 			} 
 			default -> System.out.println(Colors.TEXT_RED_BOLD + "Invalid Account Type" + Colors.TEXT_RESET);
-			}
-			
+			}	
 		}
 		
+		//method create to have data to show when executing listall()
+		public static void createAccountTest() {
+			accountController.create(new CheckingAccount(accountController.createNumber(), 123, 1, "Danielle Caricati", 10000.0f, 150.00f));
+			accountController.create(new CheckingAccount(accountController.createNumber(), 456, 1, "Adriana Mendes", 20000.0f, 200.0f));
+			accountController.create(new SavingsAccount(accountController.createNumber(), 789, 2, "Isabel de Fatima", 15000.0f, 12));
+			accountController.create(new SavingsAccount(accountController.createNumber(), 004, 2, "Fabiana Mendes", 13000.0f, 20));
+		}	
+		
+		//method to find by number
+		private static void findAccountByNumber() {
+			System.out.println("Enter the Account Number you want to find: ");
+			int accountNumber = read.nextInt();
+			accountController.findByNumber(accountNumber);
+		}
+		
+		//method to update account
+		private static void updateAccount() {
+			System.out.print("Enter Account Number you want to update: ");
+			int accountNumber = read.nextInt();
+			read.nextLine();
+			
+			Account account = accountController.searchCollection(accountNumber);
+			if (account != null) {
+				int accountBranch = account.getAccountBranch();
+				String accountHolder = account.getAccountHolder();
+				float balance = account.getBalance();
+				int accountType = account.getAccountType();
+				
+				System.out.printf("Account Branch: %d\nNew Account Branch (Press Enter to confirm): ", accountBranch);
+				String enter = read.nextLine();
+				accountBranch = enter.isEmpty() ? accountBranch : Integer.parseInt(enter);
+				
+				System.out.printf("Account Holder: %s\nNew Account Holder (Press Enter to confirm): ", accountHolder);
+				enter = read.nextLine();
+				accountHolder = enter.isEmpty() ? accountHolder : enter;
+				
+				System.out.printf("Balance: $ %.2f\nNew Balance (Press Enter to confirm): ", balance);
+				enter = read.nextLine();
+				balance = enter.isEmpty() ? balance : Float.parseFloat(enter.replace(',','.'));
+				
+				switch (accountType) {
+				case 1 -> {
+					float limit = ((CheckingAccount) account).getLimit();
+					System.out.printf("Limit: $ %.2f\nNew Limit (Press Enter to confirm):", limit);
+					enter = read.nextLine();
+					limit = enter.isEmpty() ? limit : Float.parseFloat(enter.replace(',','.'));
+					accountController.update(new CheckingAccount(accountNumber, accountBranch, accountType, accountHolder, balance, limit ));
+				}
+				case 2 -> {
+					int anniversary = ((SavingsAccount) account).getAnniversary();
+					System.out.printf("Anniversary Day: %d\nNew Anniversary Day (Press Enter to confirm): ", anniversary);
+					enter = read.nextLine();
+					anniversary = enter.isEmpty() ? anniversary : Integer.parseInt(enter);
+					accountController.update(new SavingsAccount(accountNumber, accountBranch, accountType, accountHolder, balance, anniversary));
+				}
+				default -> System.out.println(Colors.TEXT_RED_BOLD + "Invalid Account Type" + Colors.TEXT_RESET);
+				}
+			} else {
+				System.out.printf("\nAccount Number %d has not been found" + accountNumber);
+			}	
+		}
+		
+		private static void deleteAccount() {
+			System.out.print("Enter the Account Number you want to delete: ");
+			int accountNumber = read.nextInt();
+			read.nextLine();
+			
+			System.out.print("Are you sure you want to delete this account? (S/N): ");
+			String confirmation = read.nextLine();
+			
+			if (confirmation.equalsIgnoreCase("S")) {
+				accountController.delete(accountNumber);
+			} else {
+				System.out.println("\nOperation Cancelled.");
+			}
+		}
 
 }
